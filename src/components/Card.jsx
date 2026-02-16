@@ -1,6 +1,9 @@
 import { memo } from 'react'
 
 export default memo(function Card({ politico }) {
+
+    console.log("card");
+
     return (
         <div className="col">
             <div className="card">
