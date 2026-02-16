@@ -1,38 +1,33 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
+import Card from './components/Card'
 
 function App() {
 
   const [politici, setPolitici] = useState([])
-
-
-  const loadPolitici = async () => {
-    const res = await fetch('http://localhost:3333/politicians')
-    const data = await res.json()
-    setPolitici(data)
-  }
-
-  console.log(politici);
+  const [search, setSearch] = useState("")
 
   useEffect(() => {
+    const loadPolitici = async () => {
+      const res = await fetch('http://localhost:3333/politicians')
+      const data = await res.json()
+      setPolitici(data)
+    }
     loadPolitici()
   }, [])
+
+  const filteredInfo = useMemo(() => {
+    return politici.filter(filtro => {
+      return (filtro?.name ?? "").toLowerCase().includes(search.toLowerCase())
+    })
+  }, [politici, search])
 
   return (
     <>
       <div className="container">
-        <input type="text" value={ } />
+        <input className='my-3' type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder='cerca...' />
         <div className="row row-cols-4">
-          {politici.map((politico) => (
-            <div className="col" key={politico.id}>
-              <div className="card">
-                <img src={politico.image} alt={politico.name} />
-                <div>
-                  <h4>{politico.name}</h4>
-                  <p>{politico.position}</p>
-                  <p>{politico.biography}</p>
-                </div>
-              </div>
-            </div>
+          {filteredInfo.map((politico) => (
+            <Card key={politico.id} politico={politico} />
           ))}
         </div>
       </div>
