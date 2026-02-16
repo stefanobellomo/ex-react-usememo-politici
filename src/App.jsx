@@ -17,7 +17,9 @@ function App() {
 
   const filteredInfo = useMemo(() => {
     return politici.filter(filtro => {
-      return (filtro?.name ?? "").toLowerCase().includes(search.toLowerCase())
+      const nameFiltered = (filtro?.name ?? "").toLowerCase().includes(search.toLowerCase())
+      const bioFiltered = (filtro?.biography ?? "").toLowerCase().includes(search.toLowerCase())
+      return nameFiltered || bioFiltered
     })
   }, [politici, search])
 
